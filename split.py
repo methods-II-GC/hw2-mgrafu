@@ -34,27 +34,33 @@ def write_tags(source: Iterator[List[List[str]]], path: str):
             for word in line:
                 statement = ' '.join(word)
                 print(statement, file=target)
+            # To print blank lines after each sentence.
             print('', file=target)
 
 def main(args: argparse.Namespace) -> None:
+    # These get the corpus as an iterator and its info.
     corpus_name = args.input
     corpus = list(read_tags(corpus_name))
     corpus_len = len(corpus)
     
+    # These create a seeded PRNG just to shuffle the corpus.
     corpus_shuffler = random.Random(args.seed)
     corpus_shuffler.shuffle(corpus)
     
+    # These get the info for the train file and write it.
     train_file_name = args.train
     train_file_EOF_corpus_index = math.floor(corpus_len / 10 * 8)
     train_file_data = corpus[:train_file_EOF_corpus_index]
     write_tags(train_file_data, train_file_name)
     
+    # These get the info for the dev file and write it.
     dev_file_name = args.dev
     dev_file_BOF_corpus_index = math.floor(corpus_len / 10 * 8)
     dev_file_EOF_corpus_index = math.floor(corpus_len / 10 * 9)
     dev_file_data = corpus[dev_file_BOF_corpus_index:dev_file_EOF_corpus_index]
     write_tags(dev_file_data, dev_file_name)
-
+    
+    # These get the info for the test file and write it.
     test_file_name = args.test
     test_file_BOF_corpus_index = math.floor(corpus_len / 10 * 9)
     test_file_data = corpus[test_file_BOF_corpus_index:]
