@@ -5,14 +5,12 @@ This script takes a file as an imput, tokenizes it and randomizes it
 to divide it into three files with names given in the command line.
 These files will have 80%, 10% and 10% of the corpus content, respectively,
 so the script can be used to create train, dev and test files.
-
-To check for accuracy, the randomizer is seeded with the number ####.
 """
 
 import argparse
 
 from math import floor
-from random import shuffle
+from random import shuffle, seed
 from typing import Iterator, List
 
 
@@ -41,8 +39,10 @@ def write_tags(source: Iterator[List[List[str]]], path: str):
 def main(args: argparse.Namespace) -> None:
     corpus_name = args.input
     corpus = list(read_tags(corpus_name))
-    shuffle(corpus)
     corpus_len = len(corpus)
+    
+    seed(args.seed)
+    shuffle(corpus)
     
     train_file_name = args.train
     train_file_EOF_corpus_index = floor(corpus_len / 10 * 8)
@@ -67,5 +67,6 @@ if __name__ == "__main__":
     parser.add_argument("train", type=str, help="File name for the training data file to be written.")
     parser.add_argument("dev", type=str, help="File name for the dev data file to be written.")
     parser.add_argument("test", type=str, help="File name for the testing data file to be written.")
+    parser.add_argument("--seed", required=True, help="PRNG seed to generate replicable results.")
     
     main(parser.parse_args())
