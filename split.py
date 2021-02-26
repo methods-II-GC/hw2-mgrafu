@@ -11,8 +11,8 @@ To check for accuracy, the randomizer is seeded with the number ####.
 
 import argparse
 
-
 from math import floor
+from random import shuffle
 from typing import Iterator, List
 
 
@@ -30,7 +30,6 @@ def read_tags(path: str) -> Iterator[List[List[str]]]:
     if lines:
         yield lines
 
-
 def write_tags(source: Iterator[List[List[str]]], path: str):
     with open(path, "w") as target:
         for line in source:
@@ -39,10 +38,10 @@ def write_tags(source: Iterator[List[List[str]]], path: str):
                 print(statement, file=target)
             print('', file=target)
 
-
 def main(args: argparse.Namespace) -> None:
     corpus_name = args.input
     corpus = list(read_tags(corpus_name))
+    shuffle(corpus)
     corpus_len = len(corpus)
     
     train_file_name = args.train
@@ -62,12 +61,11 @@ def main(args: argparse.Namespace) -> None:
     write_tags(test_file_data, test_file_name)
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("input", type=str, help="File name for the corpus to be used.")
     parser.add_argument("train", type=str, help="File name for the training data file to be written.")
     parser.add_argument("dev", type=str, help="File name for the dev data file to be written.")
     parser.add_argument("test", type=str, help="File name for the testing data file to be written.")
-
+    
     main(parser.parse_args())
