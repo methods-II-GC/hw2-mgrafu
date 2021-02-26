@@ -30,9 +30,20 @@ def read_tags(path: str) -> Iterator[List[List[str]]]:
         yield lines
 
 
+def write_tags(source: Iterator[List[List[str]]], path: str):
+    with open(path, "w") as target:
+        for line in source:
+            for word in line:
+                statement = ' '.join(word)
+                print(statement, file=target)
+            if line is not source[-1]:
+                print('', file=target)
+
+
 def main(args: argparse.Namespace) -> None:
     corpus = list(read_tags("conll2000.tag"))
-    print(corpus[0])
+    write_test = corpus[:2]
+    write_tags(write_test, 'writetest.tag')
 
 
 if __name__ == "__main__":
