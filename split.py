@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Tokenizes a corpus and splits into test, dev and training files.
 
 This script takes a file as an imput, tokenizes it and randomizes it
